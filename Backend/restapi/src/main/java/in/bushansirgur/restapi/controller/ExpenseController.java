@@ -4,6 +4,7 @@ import in.bushansirgur.restapi.dto.ExpenseDTO;
 import in.bushansirgur.restapi.io.ExpenseResponse;
 import in.bushansirgur.restapi.service.ExpenseService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class ExpenseController {
 
     private final ExpenseService expenseService;
@@ -30,8 +32,10 @@ public class ExpenseController {
      * */
     @GetMapping("/expenses")
     public List<ExpenseResponse> getExpenses() {
+        log.info("API GET /expenses called");
         //Call the service method
         List <ExpenseDTO >list= expenseService.getAllExpenses();
+        log.info("Printing the data from service {}", list);
         //Convert the Expense DTO to Expense Response
         List<ExpenseResponse> response = list.stream().map(expenseDTO -> mapToExpenseResponse(expenseDTO)).collect(Collectors.toList());
         //Return the list/response
