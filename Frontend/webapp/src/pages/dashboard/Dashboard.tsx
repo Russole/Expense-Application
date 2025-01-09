@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ExpenseList from "../../components/ExpenseList";
 import { Expense } from "../../model/Expense";
-import apiClient from "../../config/api-client";
+import { getExpenses } from "../../services/expense-service";
 const Dashboard = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [error, setErrors] = useState(null);
@@ -9,8 +9,7 @@ const Dashboard = () => {
   useEffect(() => {
     //api call to backend system
     setLoader(true);
-    apiClient
-      .get("/expenses")
+    getExpenses()
       .then((response) => {
         setExpenses(response.data);
       })
