@@ -8,17 +8,23 @@ const Dashboard = () => {
   const [isLoading, setLoader] = useState(false);
   useEffect(() => {
     //api call to backend system
+    setLoader(true);
     apiClient
       .get("/expenses")
       .then((response) => {
         setExpenses(response.data);
-        setLoader(false);
       })
       .catch((error) => setErrors(error.message))
       .finally(() => setLoader(false));
   }, []);
 
-  return <ExpenseList expenses={expenses} />;
+  return (
+    <div>
+      {isLoading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
+      <ExpenseList expenses={expenses} />;
+    </div>
+  );
 };
 
 export default Dashboard;
