@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+body, html{
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 1.1em;
+}
+
+.app-primary-color{
+    color: #79589F;
+}
+
+.app-primary-bg-color{
+    background-color: #79589F;
+}
