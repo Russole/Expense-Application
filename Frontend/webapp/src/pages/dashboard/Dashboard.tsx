@@ -1,22 +1,8 @@
-import { useEffect, useState } from "react";
 import ExpenseList from "../../components/ExpenseList";
-import { Expense } from "../../model/Expense";
-import { getExpenses } from "../../services/expense-service";
-const Dashboard = () => {
-  const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [error, setErrors] = useState(null);
-  const [isLoading, setLoader] = useState(false);
-  useEffect(() => {
-    //api call to backend system
-    setLoader(true);
-    getExpenses()
-      .then((response) => {
-        setExpenses(response.data);
-      })
-      .catch((error) => setErrors(error.message))
-      .finally(() => setLoader(false));
-  }, []);
+import useExpenses from "../../hooks/useExpenses";
 
+const Dashboard = () => {
+  const { expenses, error, isLoading } = useExpenses();
   return (
     <div>
       {isLoading && <p>Loading...</p>}
