@@ -1,41 +1,23 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ExpenseList from "../../components/ExpenseList";
 import { Expense } from "../../model/Expense";
 import apiClient from "../../config/api-client";
 const Dashboard = () => {
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [error, setErrors] = useState(null);
+  const [isLoading, setLoader] = useState(false);
   useEffect(() => {
     //api call to backend system
     apiClient
       .get("/expenses")
-      .then((response) => console.log(response))
-      .catch((error) => console.log(error));
+      .then((response) => {
+        setExpenses(response.data);
+        setLoader(false);
+      })
+      .catch((error) => setErrors(error.message))
+      .finally(() => setLoader(false));
   }, []);
-  const expenses: Expense[] = [
-    {
-      id: 1,
-      name: "Water bill",
-      amount: 288.0,
-      date: new Date().toDateString(),
-      category: "Utilities",
-      note: "bulls",
-    },
-    {
-      id: 2,
-      name: "Electricity bill",
-      amount: 500.0,
-      date: new Date().toDateString(),
-      category: "Utilities",
-      note: "bulls",
-    },
-    {
-      id: 3,
-      name: "Wifi bill",
-      amount: 700.0,
-      date: new Date().toDateString(),
-      category: "Utilities",
-      note: "bulls",
-    },
-  ];
+
   return <ExpenseList expenses={expenses} />;
 };
 

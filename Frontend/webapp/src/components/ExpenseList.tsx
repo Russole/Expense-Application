@@ -16,7 +16,7 @@ const ExpenseList = ({ expenses }: Props) => {
         </thead>
         <tbody>
           {expenses.map((expense) => (
-            <tr key={expense.id}>
+            <tr key={expense.expenseId}>
               <td>{expense.name}</td>
               <td>{expense.amount}</td>
               <td>{expense.date}</td>
