@@ -32,19 +32,21 @@ const ExpenseList = ({ expenses }: Props) => {
         <span className="float-end">Amount</span>
       </h5>
       <div className="card-body">
-        <div>
-          <div className="d-flex justify-content-between border-bottom-1 p-3 text-dark">
-            <div className="card-title m-0">
-              <h5>Water Bill</h5>
-              <span className="fst-italic">new Date().toString();</span>
-            </div>
-            <div className="card-subtitle">
-              <span className="badge rounded-pill app-primary-bg-color">
-                500.0
-              </span>
+        {expenses.map((expense) => (
+          <div>
+            <div className="d-flex justify-content-between border-bottom-1 p-3 text-dark">
+              <div className="card-title m-0">
+                <h5>{expense.name}</h5>
+                <span className="fst-italic">{expense.date.toString()}</span>
+              </div>
+              <div className="card-subtitle">
+                <span className="badge rounded-pill app-primary-bg-color">
+                  {expense.amount}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        ))}
       </div>
     </div>
   );

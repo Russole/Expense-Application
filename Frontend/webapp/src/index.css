@@ -12,3 +12,15 @@ body, html{
 .app-primary-bg-color{
     background-color: #79589F;
 }
+
+.card-body {
+    padding: 0 !important;
+}
+
+.border-bottom-1{
+    border-bottom: 1px solid lightgray;
+}
+
+.card-subtitle{
+    margin-top: 1rem;
+}
