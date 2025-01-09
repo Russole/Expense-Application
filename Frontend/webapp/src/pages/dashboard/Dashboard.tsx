@@ -1,6 +1,15 @@
+import { useEffect } from "react";
 import ExpenseList from "../../components/ExpenseList";
 import { Expense } from "../../model/Expense";
+import apiClient from "../../config/api-client";
 const Dashboard = () => {
+  useEffect(() => {
+    //api call to backend system
+    apiClient
+      .get("/expenses")
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error));
+  }, []);
   const expenses: Expense[] = [
     {
       id: 1,
