@@ -46,9 +46,10 @@ public class ExpenseController {
     }
 
     @GetMapping("/expenses/{expenseId}")
-    public String getExpenseById(@PathVariable String expenseId) {
+    public ExpenseResponse getExpenseById(@PathVariable String expenseId) {
         log.info("API GET /expenses/{} called", expenseId);
-        return "Printing the expense id " + expenseId;
+        ExpenseDTO expenseDTO = expenseService.getExpenseByExpenseId(expenseId);
+        return mapToExpenseResponse(expenseDTO);
     }
     /**
      * Mapper method for converting expense dto object to expense response

@@ -40,6 +40,12 @@ public class ExpenseServiceImpl implements ExpenseService {
         return listOfExpenses;
     }
 
+    @Override
+    public ExpenseDTO getExpenseByExpenseId(String expenseId) {
+        ExpenseEntity optionalExpenses = expenseRepository.findByExpenseId(expenseId).get();
+        return mapToExpenseDTO(optionalExpenses);
+    }
+
     /**
      * Mapper method to convert expense entity to expense DTO
      * @param expenseEntity
