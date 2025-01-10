@@ -45,10 +45,16 @@ public class ExpenseController {
         return response;
     }
 
+    /**
+     * It will fetch the single expense from database
+     * @param expenseId
+     * @return ExpenseResponse
+     * */
     @GetMapping("/expenses/{expenseId}")
     public ExpenseResponse getExpenseById(@PathVariable String expenseId) {
         log.info("API GET /expenses/{} called", expenseId);
         ExpenseDTO expenseDTO = expenseService.getExpenseByExpenseId(expenseId);
+        log.info("Printing the expense details {}", expenseId);
         return mapToExpenseResponse(expenseDTO);
     }
     /**

@@ -41,11 +41,17 @@ public class ExpenseServiceImpl implements ExpenseService {
         return listOfExpenses;
     }
 
+    /**
+     * It will fetch the single expense details from database
+     * @param expenseId
+     * @return ExpenseDTO
+     * */
     @Override
     public ExpenseDTO getExpenseByExpenseId(String expenseId) {
-        ExpenseEntity optionalExpenses = expenseRepository.findByExpenseId(expenseId)
+        ExpenseEntity expenseEntity = expenseRepository.findByExpenseId(expenseId)
                 .orElseThrow(()->new ResourceNotFoundException("Expense not found for the expense id "+expenseId));
-        return mapToExpenseDTO(optionalExpenses);
+        log.info("Printing the expense entity details {}", expenseEntity);
+        return mapToExpenseDTO(expenseEntity);
     }
 
     /**
