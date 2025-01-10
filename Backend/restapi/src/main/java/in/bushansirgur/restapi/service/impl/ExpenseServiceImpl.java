@@ -2,6 +2,7 @@ package in.bushansirgur.restapi.service.impl;
 
 import in.bushansirgur.restapi.dto.ExpenseDTO;
 import in.bushansirgur.restapi.entity.ExpenseEntity;
+import in.bushansirgur.restapi.exceptions.ResourceNotFoundException;
 import in.bushansirgur.restapi.repository.ExpenseRepository;
 import in.bushansirgur.restapi.service.ExpenseService;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,19 @@ public class ExpenseServiceImpl implements ExpenseService {
                 .map(expenseEntity-> mapToExpenseDTO(expenseEntity)).collect(Collectors.toList());
         // Return the list
         return listOfExpenses;
+    }
+
+    /**
+     * It will fetch the single expense details from database
+     * @param expenseId
+     * @return ExpenseDTO
+     * */
+    @Override
+    public ExpenseDTO getExpenseByExpenseId(String expenseId) {
+        ExpenseEntity expenseEntity = expenseRepository.findByExpenseId(expenseId)
+                .orElseThrow(()->new ResourceNotFoundException("Expense not found for the expense id "+expenseId));
+        log.info("Printing the expense entity details {}", expenseEntity);
+        return mapToExpenseDTO(expenseEntity);
     }
 
     /**
