@@ -1,5 +1,8 @@
+import { useParams } from "react-router-dom";
+
 const ExpenseDetails = () => {
-  return <div>ExpenseDetails</div>;
+  const { expenseId } = useParams();
+  return <div>ExpenseDetails - {expenseId}</div>;
 };
 
 export default ExpenseDetails;
