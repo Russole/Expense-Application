@@ -22,6 +22,8 @@ const ExpenseDetails = () => {
   }, []);
   return (
     <div className="container mt-2">
+      {isLoading && <p>Loading...</p>}
+      {errors && <p className="text-danger">errors</p>}
       <div className="d-flex flex-row-reverse mb-2">
         <button className="btn btn-sm btn-danger">Delete</button>
         <button className="btn btn-sm btn-warning mx-2">Edit</button>
@@ -33,23 +35,23 @@ const ExpenseDetails = () => {
             <tbody>
               <tr>
                 <th>Name</th>
-                <td>Water bill</td>
+                <td>{expense?.name}</td>
               </tr>
               <tr>
                 <th>Category</th>
-                <td>Bills</td>
+                <td>{expense?.category}</td>
               </tr>
               <tr>
                 <th>Amount</th>
-                <td>{CurrencyUtils.formatToINR(500)}</td>
+                <td>{CurrencyUtils.formatToINR(expense?.amount!)}</td>
               </tr>
               <tr>
                 <th>Date</th>
-                <td>{DateUtils.formatDateString("2024-7-14")}</td>
+                <td>{DateUtils.formatDateString(expense?.date!)}</td>
               </tr>
               <tr>
                 <th>Note</th>
-                <td>My first spending</td>
+                <td>{expense?.note}</td>
               </tr>
             </tbody>
           </table>
