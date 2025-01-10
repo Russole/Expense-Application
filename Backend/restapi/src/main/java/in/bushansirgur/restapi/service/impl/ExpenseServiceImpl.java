@@ -42,7 +42,8 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public ExpenseDTO getExpenseByExpenseId(String expenseId) {
-        ExpenseEntity optionalExpenses = expenseRepository.findByExpenseId(expenseId).get();
+        ExpenseEntity optionalExpenses = expenseRepository.findByExpenseId(expenseId)
+                .orElseThrow(()->new RuntimeException("Expense not found for the expense id "+expenseId));
         return mapToExpenseDTO(optionalExpenses);
     }
 
