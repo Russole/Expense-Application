@@ -1,4 +1,5 @@
 import { Expense } from "../model/Expense";
+import CurrencyUtils from "../utils/CurrencyUtils";
 
 interface Props {
   expenses: Expense[];
@@ -41,7 +42,7 @@ const ExpenseList = ({ expenses }: Props) => {
               </div>
               <div className="card-subtitle">
                 <span className="badge rounded-pill app-primary-bg-color">
-                  {expense.amount}
+                  {CurrencyUtils.formatToINR(expense.amount)}
                 </span>
               </div>
             </div>
