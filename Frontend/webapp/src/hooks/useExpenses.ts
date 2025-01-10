@@ -4,8 +4,8 @@ import { getExpenses } from "../services/expense-service";
 
 const useExpenses = () =>{
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [error, setErrors] = useState(null);
-  const [isLoading, setLoader] = useState(false);
+  const [error, setErrors] = useState<string>("");
+  const [isLoading, setLoader] = useState<boolean>(false);
   useEffect(() => {
     //api call to backend system
     setLoader(true);
