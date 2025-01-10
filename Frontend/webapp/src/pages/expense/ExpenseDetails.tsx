@@ -6,6 +6,11 @@ const ExpenseDetails = () => {
   const { expenseId } = useParams();
   return (
     <div className="container mt-2">
+      <div className="d-flex flex-row-reverse mb-2">
+        <button className="btn btn-sm btn-danger">Delete</button>
+        <button className="btn btn-sm btn-warning mx-2">Edit</button>
+        <button className="btn btn-sm btn-secondary">Back</button>
+      </div>
       <div className="card">
         <div className="card-body p-3">
           <table className="table table-borderless table-responsive">

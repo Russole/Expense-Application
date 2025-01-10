@@ -26,7 +26,7 @@ const Navbar = () => {
           <NavLink className="btn btn-sm btn-outline-light" to="/login">
             Login
           </NavLink>
-          <NavLink className="btn btn-sm btn-outline-light" to="/register">
+          <NavLink className="btn btn-sm btn-outline-light mx-1" to="/register">
             Register
           </NavLink>
           <button
