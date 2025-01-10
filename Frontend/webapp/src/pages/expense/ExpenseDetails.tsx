@@ -1,11 +1,14 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import CurrencyUtils from "../../utils/CurrencyUtils";
 import DateUtils from "../../utils/DateUtils";
 import useExpenseByExpenseId from "../../hooks/useExpenseByExpenseId";
 
 const ExpenseDetails = () => {
   const { expenseId } = useParams<{ expenseId: string }>();
-  const { expense, errors, isLoading } = useExpenseByExpenseId(expenseId!);
+  if (!expenseId) {
+    return <p className="text-danger">Invalid Expense Id</p>;
+  }
+  const { expense, errors, isLoading } = useExpenseByExpenseId(expenseId);
   return (
     <div className="container mt-2">
       {isLoading && <p>Loading...</p>}
@@ -13,7 +16,9 @@ const ExpenseDetails = () => {
       <div className="d-flex flex-row-reverse mb-2">
         <button className="btn btn-sm btn-danger">Delete</button>
         <button className="btn btn-sm btn-warning mx-2">Edit</button>
-        <button className="btn btn-sm btn-secondary">Back</button>
+        <Link className="btn btn-sm btn-secondary" to="/">
+          Back
+        </Link>
       </div>
       <div className="card">
         <div className="card-body p-3">
