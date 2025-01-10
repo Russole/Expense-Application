@@ -1,7 +1,11 @@
+import { FaBars } from "react-icons/fa";
+import Logo from "./Logo";
+
 const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg">
       <div className="container">
+        <Logo />
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
@@ -38,7 +42,7 @@ const Navbar = () => {
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
-            <span className="navbar-toggler-icon"></span>
+            <FaBars color="white" />
           </button>
         </div>
       </div>
