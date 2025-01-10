@@ -1,12 +1,15 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Dashboard from "./pages/dashboard/Dashboard";
 
 const App = () => {
   return (
-    <div>
+    <BrowserRouter>
       <Navbar />
-      <Dashboard></Dashboard>
-    </div>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
