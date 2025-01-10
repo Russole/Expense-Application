@@ -9,7 +9,7 @@ body, html{
     color: #79589F;
 }
 
-.app-primary-bg-color{
+nav, .app-primary-bg-color{
     background-color: #79589F;
 }
 
@@ -23,4 +23,9 @@ body, html{
 
 .card-subtitle{
     margin-top: 1rem;
+}
+
+.navbar-nav .nav-link, .navbar-toggler {
+    color: white;
+    border-color: white;
 }
