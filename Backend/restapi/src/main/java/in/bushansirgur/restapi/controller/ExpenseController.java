@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -42,6 +43,12 @@ public class ExpenseController {
         List<ExpenseResponse> response = list.stream().map(expenseDTO -> mapToExpenseResponse(expenseDTO)).collect(Collectors.toList());
         //Return the list/response
         return response;
+    }
+
+    @GetMapping("/expenses/{expenseId}")
+    public String getExpenseById(@PathVariable String expenseId) {
+        log.info("API GET /expenses/{} called", expenseId);
+        return "Printing the expense id " + expenseId;
     }
     /**
      * Mapper method for converting expense dto object to expense response
