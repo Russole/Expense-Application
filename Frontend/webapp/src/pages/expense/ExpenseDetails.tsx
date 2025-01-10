@@ -1,28 +1,11 @@
 import { useParams } from "react-router-dom";
 import CurrencyUtils from "../../utils/CurrencyUtils";
 import DateUtils from "../../utils/DateUtils";
-import { getExpenseByExpenseId } from "../../services/expense-service";
-import { useEffect, useState } from "react";
-import { Expense } from "../../model/Expense";
+import useExpenseByExpenseId from "../../hooks/useExpenseByExpenseId";
 
 const ExpenseDetails = () => {
   const { expenseId } = useParams<{ expenseId: string }>();
-  const [expense, setExpense] = useState<Expense | undefined>();
-  const [errors, setErrors] = useState<string>("");
-  const [isLoading, setLoader] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (expenseId) {
-      setLoader(true);
-      getExpenseByExpenseId(expenseId)
-        .then((response) => setExpense(response.data))
-        .catch((error) => {
-          setErrors(error.message);
-          console.log(error);
-        })
-        .finally(() => setLoader(false));
-    }
-  }, []);
+  const { expense, errors, isLoading } = useExpenseByExpenseId(expenseId!);
   return (
     <div className="container mt-2">
       {isLoading && <p>Loading...</p>}
