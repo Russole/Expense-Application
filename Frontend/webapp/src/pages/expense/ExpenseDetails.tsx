@@ -16,14 +16,17 @@ const ExpenseDetails = () => {
       setLoader(true);
       getExpenseByExpenseId(expenseId)
         .then((response) => setExpense(response.data))
-        .catch((error) => setErrors(error.message))
+        .catch((error) => {
+          setErrors(error.message);
+          console.log(error);
+        })
         .finally(() => setLoader(false));
     }
   }, []);
   return (
     <div className="container mt-2">
       {isLoading && <p>Loading...</p>}
-      {errors && <p className="text-danger">errors</p>}
+      {errors && <p className="text-danger">{errors}</p>}
       <div className="d-flex flex-row-reverse mb-2">
         <button className="btn btn-sm btn-danger">Delete</button>
         <button className="btn btn-sm btn-warning mx-2">Edit</button>
@@ -35,23 +38,27 @@ const ExpenseDetails = () => {
             <tbody>
               <tr>
                 <th>Name</th>
-                <td>{expense?.name}</td>
+                <td>{expense ? expense.name : "N/A"}</td>
               </tr>
               <tr>
                 <th>Category</th>
-                <td>{expense?.category}</td>
+                <td>{expense ? expense.category : "N/A"}</td>
               </tr>
               <tr>
                 <th>Amount</th>
-                <td>{CurrencyUtils.formatToINR(expense?.amount!)}</td>
+                <td>
+                  {expense ? CurrencyUtils.formatToINR(expense.amount) : "N/A"}
+                </td>
               </tr>
               <tr>
                 <th>Date</th>
-                <td>{DateUtils.formatDateString(expense?.date!)}</td>
+                <td>
+                  {expense ? DateUtils.formatDateString(expense.date) : "N/A"}
+                </td>
               </tr>
               <tr>
                 <th>Note</th>
-                <td>{expense?.note}</td>
+                <td>{expense ? expense.note : "N/A"}</td>
               </tr>
             </tbody>
           </table>
