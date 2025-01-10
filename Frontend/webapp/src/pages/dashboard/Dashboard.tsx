@@ -9,6 +9,7 @@ const Dashboard = () => {
       {isLoading && <p>Loading...</p>}
       {error && <p>{error}</p>}
       <DashboardStatus></DashboardStatus>
+      <hr />
       <ExpenseList expenses={expenses} />;
     </div>
   );

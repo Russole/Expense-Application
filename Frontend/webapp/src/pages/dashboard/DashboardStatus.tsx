@@ -1,3 +1,5 @@
+import DateUtils from "../../utils/DateUtils";
+
 const DashboardStatus = () => {
   return (
     <div className="mt-2">
@@ -11,7 +13,7 @@ const DashboardStatus = () => {
       </div>
       <div className="d-flex justify-content-between">
         <div>Welcome</div>
-        <div>new Date().toString()</div>
+        <div>{DateUtils.getFormattedDate(new Date())}</div>
       </div>
     </div>
   );
