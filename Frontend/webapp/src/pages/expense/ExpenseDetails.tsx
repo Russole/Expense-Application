@@ -4,6 +4,7 @@ import DateUtils from "../../utils/DateUtils";
 import useExpenseByExpenseId from "../../hooks/useExpenseByExpenseId";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { useState } from "react";
+import { deleteExpenseByExpenseId } from "../../services/expense-service";
 
 const ExpenseDetails = () => {
   const { expenseId } = useParams<{ expenseId: string }>();
@@ -11,7 +12,8 @@ const ExpenseDetails = () => {
   if (!expenseId) {
     return <p className="text-danger">Invalid Expense Id</p>;
   }
-  const { expense, errors, isLoading } = useExpenseByExpenseId(expenseId);
+  const { expense, errors, isLoading, setLoader, setErrors } =
+    useExpenseByExpenseId(expenseId);
 
   const handleCancel = () => {
     console.log("Cancel is clicked");
@@ -19,8 +21,14 @@ const ExpenseDetails = () => {
   };
 
   const handleConfirm = () => {
-    console.log("Confirm is clicked");
-    setShowDialog(false);
+    setLoader(true);
+    deleteExpenseByExpenseId(expenseId)
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error))
+      .finally(() => {
+        setLoader(false);
+        setShowDialog(false);
+      });
   };
 
   return (
