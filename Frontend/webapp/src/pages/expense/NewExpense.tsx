@@ -8,6 +8,9 @@ const NewExpense = () => {
               Name
             </label>
             <input type="text" id="name" name="name" className="form-control" />
+            <div className="text-danger fst-italic">
+              Expense name is required
+            </div>
           </div>
           <div className="mb-3">
             <label htmlFor="amount" className="form-label">
@@ -19,6 +22,9 @@ const NewExpense = () => {
               name="amount"
               className="form-control"
             />
+            <div className="text-danger fst-italic">
+              Expense amount is required
+            </div>
           </div>
           <div className="mb-3">
             <label htmlFor="note" className="form-label">
@@ -31,6 +37,9 @@ const NewExpense = () => {
               Date
             </label>
             <input type="date" id="date" name="date" className="form-control" />
+            <div className="text-danger fst-italic">
+              Expense date is required
+            </div>
           </div>
           <button className="btn btn-sm btn-primary btn-outline-light">
             Save
