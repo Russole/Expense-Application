@@ -1,5 +1,44 @@
 const NewExpense = () => {
-  return <div>NewExpense</div>;
+  return (
+    <div className="d-flex justify-content-center align-items-center mt-2">
+      <div className="container col-md-4 col-sm-8 col-xs-12">
+        <form>
+          <div className="mb-3">
+            <label htmlFor="name" className="form-label">
+              Name
+            </label>
+            <input type="text" id="name" name="name" className="form-control" />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="amount" className="form-label">
+              Amount
+            </label>
+            <input
+              type="number"
+              id="amount"
+              name="amount"
+              className="form-control"
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="note" className="form-label">
+              Note
+            </label>
+            <textarea id="note" name="note" className="form-control" />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="date" className="form-label">
+              Date
+            </label>
+            <input type="date" id="date" name="date" className="form-control" />
+          </div>
+          <button className="btn btn-sm btn-primary btn-outline-light">
+            Save
+          </button>
+        </form>
+      </div>
+    </div>
+  );
 };
 
 export default NewExpense;
