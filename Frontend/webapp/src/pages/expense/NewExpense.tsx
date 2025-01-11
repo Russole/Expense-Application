@@ -1,6 +1,8 @@
 import { useFormik } from "formik";
 import { Expense } from "../../model/Expense";
 import expenseValidationSchema from "../../validation/expenseValidationSchema";
+import { expenseCategories } from "../../utils/AppConstants";
+import Dropdown from "../../components/Dropdown";
 
 const NewExpense = () => {
   const formik = useFormik({
@@ -86,6 +88,17 @@ const NewExpense = () => {
               <div className="text-danger fst-italic">{formik.errors.date}</div>
             ) : null}
           </div>
+          <Dropdown
+            options={expenseCategories}
+            id="category"
+            name="category"
+            label="Category"
+            value={formik.values.category}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.errors.category}
+            touched={formik.touched.category}
+          />
           <button
             className="btn btn-sm btn-primary btn-outline-light"
             type="submit"
