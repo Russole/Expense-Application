@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import CurrencyUtils from "../../utils/CurrencyUtils";
 import DateUtils from "../../utils/DateUtils";
 import useExpenseByExpenseId from "../../hooks/useExpenseByExpenseId";
@@ -9,6 +9,7 @@ import { deleteExpenseByExpenseId } from "../../services/expense-service";
 const ExpenseDetails = () => {
   const { expenseId } = useParams<{ expenseId: string }>();
   const [showDialog, setShowDialog] = useState<boolean>(false);
+  const navigate = useNavigate();
   if (!expenseId) {
     return <p className="text-danger">Invalid Expense Id</p>;
   }
@@ -23,8 +24,12 @@ const ExpenseDetails = () => {
   const handleConfirm = () => {
     setLoader(true);
     deleteExpenseByExpenseId(expenseId)
-      .then((response) => console.log(response))
-      .catch((error) => console.log(error))
+      .then((response) => {
+        if (response && response.status == 204) {
+          navigate("/");
+        }
+      })
+      .catch((error) => setErrors(error))
       .finally(() => {
         setLoader(false);
         setShowDialog(false);
