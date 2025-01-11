@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -63,6 +64,18 @@ public class ExpenseServiceImpl implements ExpenseService {
         ExpenseEntity expenseEntity = getExpenseEntity(expenseId);
         log.info("Printing the expense entity {}", expenseEntity);
         expenseRepository.delete(expenseEntity);
+    }
+
+    @Override
+    public ExpenseDTO saveExpenseDetails(ExpenseDTO expenseDTO) {
+        ExpenseEntity newExpenseEntity = mapToExpenseEntity(expenseDTO);
+        newExpenseEntity.setExpenseId(UUID.randomUUID().toString());
+        newExpenseEntity = expenseRepository.save(newExpenseEntity);
+        return mapToExpenseDTO(newExpenseEntity);
+    }
+
+    private ExpenseEntity mapToExpenseEntity(ExpenseDTO expenseDTO) {
+        return modelMapper.map(expenseDTO, ExpenseEntity.class);
     }
 
     /**

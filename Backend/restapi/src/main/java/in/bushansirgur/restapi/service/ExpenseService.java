@@ -28,4 +28,6 @@ public interface ExpenseService {
      * @return ExpenseDTO
      * */
     void deleteExpenseByExpenseId(String expenseId);
+
+    ExpenseDTO saveExpenseDetails(ExpenseDTO expenseDTO);
 }

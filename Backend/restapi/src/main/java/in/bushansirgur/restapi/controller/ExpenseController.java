@@ -72,9 +72,15 @@ public class ExpenseController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/expenses")
-    public ExpenseRequest saveExpenseDetails(@Valid @RequestBody ExpenseRequest expenseRequest) {
+    public ExpenseResponse saveExpenseDetails(@Valid @RequestBody ExpenseRequest expenseRequest) {
         log.info("API POST /expenses called {}", expenseRequest);
-        return expenseRequest;
+        ExpenseDTO expenseDTO = mapToExpenseDTO(expenseRequest);
+        expenseDTO = expenseService.saveExpenseDetails(expenseDTO);
+        return mapToExpenseResponse(expenseDTO);
+    }
+
+    private ExpenseDTO mapToExpenseDTO(ExpenseRequest expenseRequest) {
+        return modelMapper.map(expenseRequest, ExpenseDTO.class);
     }
 
     /**
