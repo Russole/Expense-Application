@@ -1,6 +1,11 @@
 import { useFormik } from "formik";
 import split from "./../../../node_modules/lodash-es/split";
 import { Expense } from "../../model/Expense";
+import * as Yup from "yup";
+
+const expenseValidationSchema = Yup.object({
+  name: Yup.string().required("Expense name is required"),
+});
 
 const NewExpense = () => {
   const formik = useFormik({
@@ -14,6 +19,7 @@ const NewExpense = () => {
     onSubmit: (values: Expense) => {
       console.log(values);
     },
+    validationSchema: expenseValidationSchema,
   });
   return (
     <div className="d-flex justify-content-center align-items-center mt-2">
@@ -30,10 +36,11 @@ const NewExpense = () => {
               className="form-control"
               value={formik.values.name}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
-            <div className="text-danger fst-italic">
-              Expense name is required
-            </div>
+            {formik.touched.name && formik.errors.name ? (
+              <div className="text-danger fst-italic">{formik.errors.name}</div>
+            ) : null}
           </div>
           <div className="mb-3">
             <label htmlFor="amount" className="form-label">
@@ -47,6 +54,7 @@ const NewExpense = () => {
               value={formik.values.amount}
               onChange={formik.handleChange}
             />
+
             <div className="text-danger fst-italic">
               Expense amount is required
             </div>
