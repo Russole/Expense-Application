@@ -56,10 +56,11 @@ public class ExpenseController {
         return mapToExpenseResponse(expenseDTO);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/expenses/{expenseId}")
-    public String deleteExpenseByExpenseId(@PathVariable String expenseId) {
+    public void deleteExpenseByExpenseId(@PathVariable String expenseId) {
         log.info("API DELETE /expenses/{} called", expenseId);
-        return "Deleting the expense by id " + expenseId;
+        expenseService.deleteExpenseByExpenseId(expenseId);
     }
     /**
      * Mapper method for converting expense dto object to expense response
