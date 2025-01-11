@@ -3,8 +3,13 @@ import { Expense } from "../../model/Expense";
 import expenseValidationSchema from "../../validation/expenseValidationSchema";
 import { expenseCategories } from "../../utils/AppConstants";
 import Dropdown from "../../components/Dropdown";
+import { saveOrUpdateExpense } from "../../services/expense-service";
+import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
 
 const NewExpense = () => {
+  const navigate = useNavigate();
+  const [error, setErrors] = useState<string>("");
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -14,13 +19,23 @@ const NewExpense = () => {
       date: new Date().toISOString().split("T")[0],
     },
     onSubmit: (values: Expense) => {
-      console.log(values);
+      saveOrUpdateExpense(values)
+        .then((response) => {
+          if (response && response.status === 201) {
+            navigate("/");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          setErrors(error.message);
+        });
     },
     validationSchema: expenseValidationSchema,
   });
   return (
     <div className="d-flex justify-content-center align-items-center mt-2">
       <div className="container col-md-4 col-sm-8 col-xs-12">
+        {error && <p className="text-danger fst-italic">{error}</p>}
         <form onSubmit={formik.handleSubmit}>
           <div className="mb-3">
             <label htmlFor="name" className="form-label">
