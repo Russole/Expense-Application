@@ -1,9 +1,7 @@
 package in.bushansirgur.restapi.io;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -15,6 +13,7 @@ import java.sql.Date;
 
 public class ExpenseRequest {
 
+    @NotNull
     private String name;
 
     private String note;
