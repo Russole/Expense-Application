@@ -1,11 +1,6 @@
 import { useFormik } from "formik";
-import split from "./../../../node_modules/lodash-es/split";
 import { Expense } from "../../model/Expense";
-import * as Yup from "yup";
-
-const expenseValidationSchema = Yup.object({
-  name: Yup.string().required("Expense name is required"),
-});
+import expenseValidationSchema from "../../validation/expenseValidationSchema";
 
 const NewExpense = () => {
   const formik = useFormik({
@@ -53,11 +48,14 @@ const NewExpense = () => {
               className="form-control"
               value={formik.values.amount}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
 
-            <div className="text-danger fst-italic">
-              Expense amount is required
-            </div>
+            {formik.touched.amount && formik.errors.amount ? (
+              <div className="text-danger fst-italic">
+                {formik.errors.amount}
+              </div>
+            ) : null}
           </div>
           <div className="mb-3">
             <label htmlFor="note" className="form-label">
@@ -82,10 +80,11 @@ const NewExpense = () => {
               className="form-control"
               value={formik.values.date}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
-            <div className="text-danger fst-italic">
-              Expense date is required
-            </div>
+            {formik.touched.date && formik.errors.date ? (
+              <div className="text-danger fst-italic">{formik.errors.date}</div>
+            ) : null}
           </div>
           <button
             className="btn btn-sm btn-primary btn-outline-light"
