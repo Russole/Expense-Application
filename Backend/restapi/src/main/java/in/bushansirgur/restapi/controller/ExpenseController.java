@@ -56,6 +56,11 @@ public class ExpenseController {
         return mapToExpenseResponse(expenseDTO);
     }
 
+    /**
+     * It will delete the expense from database
+     * @param expenseId
+     * @return void
+     * */
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/expenses/{expenseId}")
     public void deleteExpenseByExpenseId(@PathVariable String expenseId) {
