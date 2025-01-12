@@ -1,8 +1,10 @@
 import profileValidationSchema from "../../validation/profileValidationSchema";
 import { Profile } from "../../model/Profile";
 import { useFormik } from "formik";
+import { useRegister } from "../../hooks/useRegister";
 
 const Register = () => {
+  const { error, isLoading, signup, toast } = useRegister();
   const formik = useFormik<Profile>({
     initialValues: {
       name: "",
@@ -11,13 +13,17 @@ const Register = () => {
       confirmPassword: "",
     },
     validationSchema: profileValidationSchema,
-    onSubmit: (values: Profile) => {
-      console.log("values", values);
+    onSubmit: (profile: Profile, { resetForm }) => {
+      signup(profile);
+      resetForm();
     },
   });
   return (
     <div className="d-flex justify-content-center align-items-center login-background">
       <div className="container col-md-4 col-sm-12">
+        {isLoading && <p>Loading...</p>}
+        {error && <p className="text-danger">{error}</p>}
+        {toast && <p className="text-primary">{toast}</p>}
         <form onSubmit={formik.handleSubmit}>
           <div className="mb-3">
             <label htmlFor="name" className="form-label">
