@@ -1,10 +1,24 @@
 import profileValidationSchema from "../../validation/profileValidationSchema";
+import { Profile } from "../../model/Profile";
+import { useFormik } from "formik";
 
 const Register = () => {
+  const formik = useFormik<Profile>({
+    initialValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+    validationSchema: profileValidationSchema,
+    onSubmit: (values: Profile) => {
+      console.log("values", values);
+    },
+  });
   return (
     <div className="d-flex justify-content-center align-items-center login-background">
       <div className="container col-md-4 col-sm-12">
-        <form>
+        <form onSubmit={formik.handleSubmit}>
           <div className="mb-3">
             <label htmlFor="name" className="form-label">
               Name
@@ -15,8 +29,13 @@ const Register = () => {
               id="name"
               placeholder="Enter your name"
               name="name"
+              value={formik.values.name}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
-            <div className="text-danger fst-italic">Name is required</div>
+            {formik.touched.name && formik.errors.name ? (
+              <div className="text-danger fst-italic">{formik.errors.name}</div>
+            ) : null}
           </div>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">
@@ -28,8 +47,15 @@ const Register = () => {
               id="email"
               placeholder="Enter your email"
               name="email"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
-            <div className="text-danger fst-italic">E-mail is required</div>
+            {formik.touched.email && formik.errors.email ? (
+              <div className="text-danger fst-italic">
+                {formik.errors.email}
+              </div>
+            ) : null}
           </div>
           <div className="mb-3">
             <label htmlFor="password" className="form-label">
@@ -41,8 +67,15 @@ const Register = () => {
               id="password"
               placeholder="Enter password"
               name="password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
-            <div className="text-danger fst-italic">Password is required</div>
+            {formik.touched.password && formik.errors.password ? (
+              <div className="text-danger fst-italic">
+                {formik.errors.password}
+              </div>
+            ) : null}
           </div>
           <div className="mb-3">
             <label htmlFor="retypePassword" className="form-label">
@@ -53,9 +86,16 @@ const Register = () => {
               className="form-control"
               id="retypePassword"
               placeholder="Confirm password"
-              name="retypePassword"
+              name="confirmPassword"
+              value={formik.values.confirmPassword}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
-            <div className="text-danger fst-italic">Password did not match</div>
+            {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
+              <div className="text-danger fst-italic">
+                {formik.errors.confirmPassword}
+              </div>
+            ) : null}
           </div>
           <button
             className="btn btn-sm btn-primary btn-outline-light mx-1"
