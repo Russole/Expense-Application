@@ -1,5 +1,6 @@
 package in.bushansirgur.restapi.controller;
 
+import in.bushansirgur.restapi.dto.ProfileDTO;
 import in.bushansirgur.restapi.io.ProfileRequest;
 import in.bushansirgur.restapi.io.ProfileResponse;
 import jakarta.validation.Valid;
@@ -23,10 +24,15 @@ public class AuthController {
     @PostMapping("/register")
     public ProfileResponse createProfile(@Valid @RequestBody ProfileRequest profileRequest) {
         log.info("API /register is called {}", profileRequest);
-        return mapToProfileResponse(profileRequest);
+        ProfileDTO profileDto = mapToProfileDTO(profileRequest);
+        return mapToProfileResponse(profileDto);
     }
 
-    private ProfileResponse mapToProfileResponse(ProfileRequest profileRequest) {
+    private ProfileDTO mapToProfileDTO(ProfileRequest profileRequest) {
+        return modelMapper.map(profileRequest, ProfileDTO.class);
+    }
+
+    private ProfileResponse mapToProfileResponse(ProfileDTO profileRequest) {
         return modelMapper.map(profileRequest, ProfileResponse.class);
     }
 }
