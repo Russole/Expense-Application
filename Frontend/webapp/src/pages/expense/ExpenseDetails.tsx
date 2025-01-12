@@ -47,7 +47,12 @@ const ExpenseDetails = () => {
         >
           Delete
         </button>
-        <button className="btn btn-sm btn-warning mx-2">Edit</button>
+        <button
+          className="btn btn-sm btn-warning mx-2"
+          onClick={() => navigate(`/edit/${expenseId}`)}
+        >
+          Edit
+        </button>
         <Link className="btn btn-sm btn-secondary" to="/">
           Back
         </Link>
