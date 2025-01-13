@@ -7,6 +7,7 @@ import in.bushansirgur.restapi.io.ProfileRequest;
 import in.bushansirgur.restapi.io.ProfileResponse;
 import in.bushansirgur.restapi.service.CustomUserDetailsService;
 import in.bushansirgur.restapi.service.ProfileService;
+import in.bushansirgur.restapi.util.JwtTokenUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +20,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -29,9 +28,9 @@ public class AuthController {
     private final ModelMapper modelMapper;
     private final ProfileService profileService;
     private final AuthenticationManager authenticationManager;
-
-
+    private final JwtTokenUtil jwtTokenUtil;
     private final CustomUserDetailsService userDetailsService;
+
     /**
      * API endpoint to register new user
      * @param profileRequest
@@ -51,7 +50,9 @@ public class AuthController {
     public AuthResponse authenticateProfile(@RequestBody AuthRequest authRequest) throws Exception {
         log.info("API /login is called {}", authRequest);
         authenticate(authRequest);
-        return new AuthResponse(UUID.randomUUID().toString(), authRequest.getEmail());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getEmail());
+        final String token = jwtTokenUtil.generateToken(userDetails);
+        return new AuthResponse(token, authRequest.getEmail());
     }
 
     private void authenticate(AuthRequest authRequest) throws Exception {
