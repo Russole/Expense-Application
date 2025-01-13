@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class AuthController {
 
     private final ModelMapper modelMapper;
