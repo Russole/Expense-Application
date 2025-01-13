@@ -1,15 +1,25 @@
 package in.bushansirgur.restapi.controller;
 
 import in.bushansirgur.restapi.dto.ProfileDTO;
+import in.bushansirgur.restapi.io.AuthRequest;
+import in.bushansirgur.restapi.io.AuthResponse;
 import in.bushansirgur.restapi.io.ProfileRequest;
 import in.bushansirgur.restapi.io.ProfileResponse;
+import in.bushansirgur.restapi.service.CustomUserDetailsService;
 import in.bushansirgur.restapi.service.ProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @Slf4j
@@ -18,7 +28,10 @@ public class AuthController {
 
     private final ModelMapper modelMapper;
     private final ProfileService profileService;
+    private final AuthenticationManager authenticationManager;
 
+
+    private final CustomUserDetailsService userDetailsService;
     /**
      * API endpoint to register new user
      * @param profileRequest
@@ -32,6 +45,23 @@ public class AuthController {
         profileDto = profileService.createProfile(profileDto);
         log.info("Printing the profile dto details {}", profileDto);
         return mapToProfileResponse(profileDto);
+    }
+
+    @PostMapping("/login")
+    public AuthResponse authenticateProfile(@RequestBody AuthRequest authRequest) throws Exception {
+        log.info("API /login is called {}", authRequest);
+        authenticate(authRequest);
+        return new AuthResponse(UUID.randomUUID().toString(), authRequest.getEmail());
+    }
+
+    private void authenticate(AuthRequest authRequest) throws Exception {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
+        }catch (DisabledException ex) {
+            throw new Exception("Profile disabled");
+        }catch (BadCredentialsException ex) {
+            throw new Exception("Bad Credentials");
+        }
     }
 
     /**
