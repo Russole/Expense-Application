@@ -1,20 +1,21 @@
 import { useState } from "react";
-import { Profile } from "../../model/Profile";
 import { useFormik } from "formik";
 import loginValidationSchema from "../../validation/loginValidationSchema";
+import { AuthRequest } from "./../../model/AuthRequest";
+import { useLogin } from "../../hooks/useLogin";
 
 const Login = () => {
-  const [error, setError] = useState<string>("");
-  const [isLoading, setLoader] = useState<boolean>(false);
-  const formik = useFormik<Profile>({
+  const { login, isLoading, error } = useLogin();
+  const formik = useFormik<AuthRequest>({
     initialValues: {
-      name: "",
       email: "",
       password: "",
-      confirmPassword: "",
     },
     validationSchema: loginValidationSchema,
-    onSubmit: (profile: Profile) => {},
+    onSubmit: (authRequest: AuthRequest) => {
+      console.log("auth reqest", authRequest);
+      login(authRequest);
+    },
   });
   return (
     <div className="d-flex justify-content-center align-items-center login-background">
