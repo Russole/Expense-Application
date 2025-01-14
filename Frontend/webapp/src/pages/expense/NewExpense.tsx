@@ -141,7 +141,7 @@ const NewExpense = () => {
             touched={formik.touched.category}
           />
           <button
-            className="btn btn-sm btn-primary btn-outline-light"
+            className="btn btn-sm app-primary-bg-color btn-outline-light"
             type="submit"
           >
             Save

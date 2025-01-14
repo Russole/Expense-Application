@@ -10,7 +10,7 @@ body, html{
 }
 
 nav, .app-primary-bg-color{
-    background-color: #79589F;
+    background-color: #79589F !important;
 }
 
 .card-body {
