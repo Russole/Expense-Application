@@ -103,11 +103,29 @@ const Register = () => {
               </div>
             ) : null}
           </div>
+          {isLoading && (
+            <button
+              className="btn btn-sm app-primary-bg-color btn-outline-light"
+              type="submit"
+              disabled
+            >
+              Loading...
+            </button>
+          )}
+          {!isLoading && (
+            <button
+              className="btn btn-sm app-primary-bg-color btn-outline-lightbtn btn-sm app-primary-bg-color btn-outline-light"
+              type="submit"
+            >
+              Register
+            </button>
+          )}
           <button
-            className="btn btn-sm btn-primary btn-outline-light mx-1"
-            type="submit"
+            className="btn btn-sm app-primary-bg-color btn-outline-light"
+            type="reset"
+            onClick={formik.handleReset}
           >
-            Register
+            Reset
           </button>
         </form>
       </div>
