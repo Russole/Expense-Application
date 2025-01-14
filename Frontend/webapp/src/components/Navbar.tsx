@@ -15,19 +15,21 @@ const Navbar = () => {
       <div className="container">
         <Logo />
         <div className="collapse navbar-collapse" id="navbarNav">
-          <div className="navbar-nav">
-            <NavLink className="nav-link" to="/">
-              Dashboard
-            </NavLink>
+          {isAuthenticated ? (
+            <div className="navbar-nav">
+              <NavLink className="nav-link" to="/">
+                Dashboard
+              </NavLink>
 
-            <NavLink className="nav-link" to="/new">
-              New Expense
-            </NavLink>
+              <NavLink className="nav-link" to="/new">
+                New Expense
+              </NavLink>
 
-            <NavLink className="nav-link" to="/reports">
-              Reports
-            </NavLink>
-          </div>
+              <NavLink className="nav-link" to="/reports">
+                Reports
+              </NavLink>
+            </div>
+          ) : null}
         </div>
         <div className="d-flex" role="search">
           {!isAuthenticated ? (
