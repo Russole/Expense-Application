@@ -10,3 +10,7 @@ export const createProfile = (profile: Profile) => {
 export const authenticate = (authRequest: AuthRequest) => {
     return apiClient.post<AuthResponse>("/login", authRequest);
 }
+
+export const signout = () => {
+    return apiClient.post<void>("/signout");
+}
