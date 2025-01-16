@@ -2,8 +2,10 @@ package in.bushansirgur.restapi.service.impl;
 
 import in.bushansirgur.restapi.dto.ExpenseDTO;
 import in.bushansirgur.restapi.entity.ExpenseEntity;
+import in.bushansirgur.restapi.entity.ProfileEntity;
 import in.bushansirgur.restapi.exceptions.ResourceNotFoundException;
 import in.bushansirgur.restapi.repository.ExpenseRepository;
+import in.bushansirgur.restapi.service.AuthService;
 import in.bushansirgur.restapi.service.ExpenseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,8 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     private final ExpenseRepository expenseRepository;
     private final ModelMapper modelMapper;
+
+    private final AuthService authService;
 
     /**
      * It will fetch the expenses from database
@@ -73,8 +77,10 @@ public class ExpenseServiceImpl implements ExpenseService {
      * */
     @Override
     public ExpenseDTO saveExpenseDetails(ExpenseDTO expenseDTO) {
+        ProfileEntity  profileEntity= authService.getLoggedInProfile();
         ExpenseEntity newExpenseEntity = mapToExpenseEntity(expenseDTO);
         newExpenseEntity.setExpenseId(UUID.randomUUID().toString());
+        newExpenseEntity.setOwner(profileEntity);
         newExpenseEntity = expenseRepository.save(newExpenseEntity);
         log.info("Printing the new expense entity details {}", newExpenseEntity);
         return mapToExpenseDTO(newExpenseEntity);
