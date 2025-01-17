@@ -37,7 +37,8 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public List<ExpenseDTO> getAllExpenses() {
         // Call the repository method
-        List<ExpenseEntity> list = expenseRepository.findAll();
+        Long loggedInProfileId = authService.getLoggedInProfile().getId();
+        List<ExpenseEntity> list = expenseRepository.findByOwnerId(loggedInProfileId);
         log.info("Printing the data from repository {}", list);
         // convert the Entity object to DTO object
         List<ExpenseDTO> listOfExpenses = list.stream()
@@ -94,6 +95,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         updatedExpenseEntity.setExpenseId(existingExpense.getExpenseId());
         updatedExpenseEntity.setCreatedAt(existingExpense.getCreatedAt());
         updatedExpenseEntity.setUpdatedAt(existingExpense.getUpdatedAt());
+        updatedExpenseEntity.setOwner(authService.getLoggedInProfile());
         updatedExpenseEntity = expenseRepository.save(updatedExpenseEntity);
         log.info("Printing the updated expense entity details {}", updatedExpenseEntity);
         return mapToExpenseDTO(updatedExpenseEntity);
@@ -123,7 +125,8 @@ public class ExpenseServiceImpl implements ExpenseService {
      * @return ExpenseEntity
      * */
     private ExpenseEntity getExpenseEntity(String expenseId) {
-        return expenseRepository.findByExpenseId(expenseId)
+        Long id = authService.getLoggedInProfile().getId();
+        return expenseRepository.findByOwnerIdAndExpenseId(id, expenseId)
                 .orElseThrow(()->new ResourceNotFoundException("Expense not found for the expense id "+ expenseId));
     }
 }
