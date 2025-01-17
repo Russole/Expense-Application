@@ -2,8 +2,10 @@ package in.bushansirgur.restapi.service.impl;
 
 import in.bushansirgur.restapi.dto.ExpenseDTO;
 import in.bushansirgur.restapi.entity.ExpenseEntity;
+import in.bushansirgur.restapi.entity.ProfileEntity;
 import in.bushansirgur.restapi.exceptions.ResourceNotFoundException;
 import in.bushansirgur.restapi.repository.ExpenseRepository;
+import in.bushansirgur.restapi.service.AuthService;
 import in.bushansirgur.restapi.service.ExpenseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,8 @@ public class ExpenseServiceImpl implements ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final ModelMapper modelMapper;
 
+    private final AuthService authService;
+
     /**
      * It will fetch the expenses from database
      * @return list
@@ -33,7 +37,8 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public List<ExpenseDTO> getAllExpenses() {
         // Call the repository method
-        List<ExpenseEntity> list = expenseRepository.findAll();
+        Long loggedInProfileId = authService.getLoggedInProfile().getId();
+        List<ExpenseEntity> list = expenseRepository.findByOwnerId(loggedInProfileId);
         log.info("Printing the data from repository {}", list);
         // convert the Entity object to DTO object
         List<ExpenseDTO> listOfExpenses = list.stream()
@@ -73,8 +78,10 @@ public class ExpenseServiceImpl implements ExpenseService {
      * */
     @Override
     public ExpenseDTO saveExpenseDetails(ExpenseDTO expenseDTO) {
+        ProfileEntity  profileEntity= authService.getLoggedInProfile();
         ExpenseEntity newExpenseEntity = mapToExpenseEntity(expenseDTO);
         newExpenseEntity.setExpenseId(UUID.randomUUID().toString());
+        newExpenseEntity.setOwner(profileEntity);
         newExpenseEntity = expenseRepository.save(newExpenseEntity);
         log.info("Printing the new expense entity details {}", newExpenseEntity);
         return mapToExpenseDTO(newExpenseEntity);
@@ -88,6 +95,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         updatedExpenseEntity.setExpenseId(existingExpense.getExpenseId());
         updatedExpenseEntity.setCreatedAt(existingExpense.getCreatedAt());
         updatedExpenseEntity.setUpdatedAt(existingExpense.getUpdatedAt());
+        updatedExpenseEntity.setOwner(authService.getLoggedInProfile());
         updatedExpenseEntity = expenseRepository.save(updatedExpenseEntity);
         log.info("Printing the updated expense entity details {}", updatedExpenseEntity);
         return mapToExpenseDTO(updatedExpenseEntity);
@@ -117,7 +125,8 @@ public class ExpenseServiceImpl implements ExpenseService {
      * @return ExpenseEntity
      * */
     private ExpenseEntity getExpenseEntity(String expenseId) {
-        return expenseRepository.findByExpenseId(expenseId)
+        Long id = authService.getLoggedInProfile().getId();
+        return expenseRepository.findByOwnerIdAndExpenseId(id, expenseId)
                 .orElseThrow(()->new ResourceNotFoundException("Expense not found for the expense id "+ expenseId));
     }
 }
