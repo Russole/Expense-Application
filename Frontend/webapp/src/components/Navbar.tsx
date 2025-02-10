@@ -23,9 +23,9 @@ const Navbar = () => {
                 New Expense
               </NavLink>
 
-              <NavLink className="nav-link" to="/reports">
+              {/* <NavLink className="nav-link" to="/reports">
                 Reports
-              </NavLink>
+              </NavLink> */}
             </div>
           ) : null}
         </div>

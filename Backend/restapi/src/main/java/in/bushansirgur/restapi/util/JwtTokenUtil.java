@@ -15,7 +15,7 @@ import java.util.function.Function;
 @Component
 public class JwtTokenUtil {
 
-    private static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+    private static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60; // 5 * 60 * 60：這個公式將 5 小時轉換為秒數。
 
     @Value("${jwt.secret}")
     private String secret;

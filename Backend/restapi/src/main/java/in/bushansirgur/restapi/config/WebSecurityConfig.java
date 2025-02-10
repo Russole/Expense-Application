@@ -26,11 +26,15 @@ public class WebSecurityConfig {
         return httpSecurity.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/login", "/register").permitAll().anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // UsernamePasswordAuthenticationFilter 默認行為是監聽 /login 請求，並檢查 request 中的登錄資訊。
+                // AuthenticationManager 會調用 DaoAuthenticationProvider 來驗證用戶憑證
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }
 
+    // 根據已註冊的 AuthenticationProvider 來建立 AuthenticationManager。
+    // 比對成功，將用戶信息存入 SecurityContext，返回 200 OK。
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
@@ -39,8 +43,8 @@ public class WebSecurityConfig {
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(customUserDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setUserDetailsService(customUserDetailsService); // 調用 UserDetailsService（自訂的 customUserDetailsService）來 查詢用戶。
+        authProvider.setPasswordEncoder(passwordEncoder()); // 使用 passwordEncoder() 來比對密碼。
         return authProvider;
     }
 
