@@ -34,7 +34,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         String jwtToken = null;
         String email = null;
-
+        System.out.println("JWT Validation");
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
 

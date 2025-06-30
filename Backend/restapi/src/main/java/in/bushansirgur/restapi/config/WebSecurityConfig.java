@@ -28,7 +28,7 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // UsernamePasswordAuthenticationFilter 默認行為是監聽 /login 請求，並檢查 request 中的登錄資訊。
                 // AuthenticationManager 會調用 DaoAuthenticationProvider 來驗證用戶憑證
-                .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class) // 讓請求在進行用戶名與密碼驗證之前先經過 JWT（JSON Web Token）驗證
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }

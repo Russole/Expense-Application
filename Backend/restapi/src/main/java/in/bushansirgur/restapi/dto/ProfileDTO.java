@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Data // 生成 Getter、Setter、toString、equals、hashCode
+@AllArgsConstructor // 生成所有參數的建構子
+@NoArgsConstructor // 生成無參數建構子
+@Builder // 提供建造者模式
 public class ProfileDTO {
     private String profileId;
 

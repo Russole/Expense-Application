@@ -25,8 +25,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@Slf4j
+// 結合了 @Controller 和 @ResponseBody，用於標註 Spring Boot RESTful API 的控制器類，讓所有方法的回傳值自動序列化為 JSON 格式（不需要再用 @ResponseBody
+@Slf4j // 在類別內可以直接使用 log.info()、log.error()、log.debug() 來記錄日誌
 @RequiredArgsConstructor
+// 自動生成所有 final 欄位的建構子
+// 適合依賴注入（Dependency Injection, DI），讓 Spring Boot 自動注入 final 欄位的 Bean
 public class AuthController {
 
     private final ModelMapper modelMapper;
@@ -41,11 +44,12 @@ public class AuthController {
      * @param profileRequest
      * @return profileResponse
      * */
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED) // 設定 HTTP 回應狀態碼
+    @PostMapping("/register") // 用於處理 HTTP POST 請求
     public ProfileResponse createProfile(@Valid @RequestBody ProfileRequest profileRequest) {
         log.info("API /register is called {}", profileRequest);
         ProfileDTO profileDto = mapToProfileDTO(profileRequest);
+        log.info("profileRequest transfer to profileDto result {}", profileDto);
         profileDto = profileService.createProfile(profileDto);
         log.info("Printing the profile dto details {}", profileDto);
         return mapToProfileResponse(profileDto);
@@ -79,6 +83,8 @@ public class AuthController {
 
     private void authenticate(AuthRequest authRequest) throws Exception {
         try {
+            // sernamePasswordAuthenticationToken 物件被建立，封裝 email & password。
+            // AuthenticationManager 會遍歷已註冊的 AuthenticationProvider 來進行驗證
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
         }catch (DisabledException ex) {
             throw new Exception("Profile disabled");

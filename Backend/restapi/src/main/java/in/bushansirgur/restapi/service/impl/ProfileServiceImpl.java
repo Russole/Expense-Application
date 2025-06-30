@@ -13,14 +13,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-@Service
+@Service // 標註類別為服務層，它本質上與 @Component 相同，都是 Spring 管理的 Bean，但 @Service 主要是用來語義化，表示該類別負責業務邏輯處理。
 @Slf4j
 @RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
 
     private final ProfileRepository profileRepository;
-    private final ModelMapper modelMapper;
-    private final PasswordEncoder encoder;
+    // Spring Data JPA 會自動為 @Repository 介面提供 Bean 實作，不需要標註 @Repository
+    // Spring Boot 啟動時，會根據 JpaRepository 介面自動產生對應的 Bean
+    private final ModelMapper modelMapper;// RestapiApplication 執行類別註冊為 Bean
+    private final PasswordEncoder encoder;// WebSecurityConfig 類別註冊為 Bean
 
     /**
      * It will save the user details to database
@@ -36,7 +38,7 @@ public class ProfileServiceImpl implements ProfileService {
         ProfileEntity profileEntity = mapToProfileEntity(profileDTO);
         profileEntity.setProfileId(UUID.randomUUID().toString());
         //TODO: check for the email exists
-        profileEntity = profileRepository.save(profileEntity);
+        profileEntity = profileRepository.save(profileEntity); // id, createdAt, updatedAt ，這 3 個欄位在 repo save()的同時，也會給值
         log.info("Printing the profile entity details {}", profileEntity);
         return mapToProfileDTO(profileEntity);
     }
