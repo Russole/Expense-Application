@@ -24,6 +24,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(csrf -> csrf.disable())
+                // /login 和 /register 是開放的，不需要 JWT，也不會被 SecurityContextHolder 驗證
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/login", "/register").permitAll().anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // UsernamePasswordAuthenticationFilter 默認行為是監聽 /login 請求，並檢查 request 中的登錄資訊。

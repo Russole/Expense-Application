@@ -8,6 +8,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Slf4j
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -34,7 +36,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         String jwtToken = null;
         String email = null;
-        System.out.println("JWT Validation");
+        log.info("Start JWT Validation doFilterInternal()");
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
 
@@ -57,8 +59,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
             if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
+                // 建立一個 Spring Security 的身份驗證 Token
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                // 補上請求的細節資訊（例如 IP、Session ID）
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                // 把剛才建立的 authToken 放入 SecurityContext，表示這個使用者已通過驗證
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
