@@ -20,6 +20,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.token.TokenService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -58,9 +59,9 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponse authenticateProfile(@RequestBody AuthRequest authRequest) throws Exception {
         log.info("API /login is called {}", authRequest);
-        authenticate(authRequest);
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getEmail());
-        final String token = jwtTokenUtil.generateToken(userDetails);
+        Authentication authentication = authenticate(authRequest);
+        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
+        final String token = jwtTokenUtil.generateToken(userPrincipal);
         return new AuthResponse(token, authRequest.getEmail());
     }
 
@@ -81,11 +82,12 @@ public class AuthController {
         return null;
     }
 
-    private void authenticate(AuthRequest authRequest) throws Exception {
+    private Authentication authenticate(AuthRequest authRequest) throws Exception {
         try {
             // sernamePasswordAuthenticationToken 物件被建立，封裝 email & password。
             // AuthenticationManager 會遍歷已註冊的 AuthenticationProvider 來進行驗證
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
+            return authentication;
         }catch (DisabledException ex) {
             throw new Exception("Profile disabled");
         }catch (BadCredentialsException ex) {
