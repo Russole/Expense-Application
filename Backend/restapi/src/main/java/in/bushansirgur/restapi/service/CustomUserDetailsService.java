@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         ProfileEntity profile = profileRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Profile not found for the email "+email));
-        log.info("Inside loadUserByUsername()::: priting the profile details {}", profile);
+//        log.info("Inside loadUserByUsername()::: priting the profile details {}", profile);
         return new User(profile.getEmail(), profile.getPassword(), new ArrayList<>());
     }
 }
