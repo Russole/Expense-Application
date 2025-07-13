@@ -58,11 +58,12 @@ public class AuthController {
 
     @PostMapping("/login")
     public AuthResponse authenticateProfile(@RequestBody AuthRequest authRequest) throws Exception {
-//        log.info("API /login is called {}", authRequest);
-        Authentication authentication = authenticate(authRequest);
-        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
-        final String token = jwtTokenUtil.generateToken(userPrincipal);
-        return new AuthResponse(token, authRequest.getEmail());
+        log.info("API /login is called {}", authRequest);
+//        Authentication authentication = authenticate(authRequest);
+//        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
+//        final String token = jwtTokenUtil.generateToken(userPrincipal);
+//        return new AuthResponse(token, authRequest.getEmail());
+        return new AuthResponse();
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

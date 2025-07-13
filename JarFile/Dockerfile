@@ -5,7 +5,7 @@ FROM container-registry.oracle.com/java/openjdk:24
 WORKDIR /app
 
 # 複製整個 jars 資料夾到容器中
-COPY restapi-bf0881b-c5Xlarge.jar /app/restapi-bf0881b-c5Xlarge
+COPY restapi-cfd4ee0-c5Xlarge.jar /app/restapi-cfd4ee0-c5Xlarge
 
 # 設定容器啟動時執行的 JAR
-ENTRYPOINT ["java", "-jar", "/app/restapi-bf0881b-c5Xlarge"]
+ENTRYPOINT ["java", "-jar", "/app/restapi-cfd4ee0-c5Xlarge"]
