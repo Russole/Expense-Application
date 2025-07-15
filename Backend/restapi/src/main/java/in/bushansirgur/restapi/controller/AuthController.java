@@ -24,6 +24,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.token.TokenService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.userdetails.User;
+
+import java.util.Collections;
 
 @RestController
 // 結合了 @Controller 和 @ResponseBody，用於標註 Spring Boot RESTful API 的控制器類，讓所有方法的回傳值自動序列化為 JSON 格式（不需要再用 @ResponseBody
@@ -62,8 +65,14 @@ public class AuthController {
 //        Authentication authentication = authenticate(authRequest);
 //        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
 //        final String token = jwtTokenUtil.generateToken(userPrincipal);
-//        return new AuthResponse(token, authRequest.getEmail());
-        return new AuthResponse();
+        // ✅ 模擬一個假的 User，省去資料庫驗證
+        UserDetails mockUser = new User(
+                authRequest.getEmail(),
+                authRequest.getPassword(),
+                Collections.emptyList()
+        );
+        final String token = jwtTokenUtil.generateToken(mockUser);
+        return new AuthResponse(token, authRequest.getEmail());
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
