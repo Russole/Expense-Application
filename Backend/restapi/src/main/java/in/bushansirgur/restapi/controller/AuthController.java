@@ -14,6 +14,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,6 +28,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.userdetails.User;
 
+import java.time.Duration;
 import java.util.Collections;
 
 @RestController
@@ -42,6 +45,9 @@ public class AuthController {
     private final JwtTokenUtil jwtTokenUtil;
     private final CustomUserDetailsService userDetailsService;
     private final TokenBlacklistService tokenBlacklistService;
+    @Qualifier("customRedisTemplate")
+    private final StringRedisTemplate customRedisTemplate;
+
 
     /**
      * API endpoint to register new user
@@ -62,8 +68,17 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponse authenticateProfile(@RequestBody AuthRequest authRequest) throws Exception {
         log.info("API /login is called {}", authRequest);
+        String email = authRequest.getEmail();
+        String redisKey = "login:token:" + email;
+        // ✅ 1. 嘗試從 Redis 取得快取的 token
+        String cachedToken = customRedisTemplate.opsForValue().get(redisKey);
+        if (cachedToken != null) {
+            log.info("✅ 快取命中，直接回傳 token");
+            return new AuthResponse(cachedToken, email);
+        }
+        // ✅ 2. Redis 無快取 → 正常驗證流程
         Authentication authentication = authenticate(authRequest);
-//        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
+        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
 //        final String token = jwtTokenUtil.generateToken(userPrincipal);
         // 模擬一個假的 User，省去資料庫驗證
 //        UserDetails mockUser = new User(
@@ -71,9 +86,11 @@ public class AuthController {
 //                authRequest.getPassword(),
 //                Collections.emptyList()
 //        );
-//        final String token = jwtTokenUtil.generateToken(mockUser);
-//        return new AuthResponse(token, authRequest.getEmail());
-        return new AuthResponse();
+        // ✅ 3. 產生 token（可根據你的 jwtTokenUtil 改寫）
+        final String token = jwtTokenUtil.generateToken(userPrincipal);
+        // ✅ 4. 快取 token 到 Redis（有效期例如 20 秒）
+        customRedisTemplate.opsForValue().set(redisKey, token, Duration.ofSeconds(20));
+        return new AuthResponse(token, email);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
