@@ -29,3 +29,9 @@ docker run --rm -p 8080:8080 -e SPRING_PROFILES_ACTIVE=dockerEC2 --name Expense-
 docker run -d --network my-network --name redis-local -p 6379:6379 redis:7
 docker logs -f Expense-App
 ```
+
+### Redis
+
+```
+docker exec -it redis-local redis-cli
+```
