@@ -63,8 +63,8 @@ public class AuthController {
     public AuthResponse authenticateProfile(@RequestBody AuthRequest authRequest) throws Exception {
         log.info("API /login is called {}", authRequest);
         Authentication authentication = authenticate(authRequest);
-        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
-        final String token = jwtTokenUtil.generateToken(userPrincipal);
+//        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
+//        final String token = jwtTokenUtil.generateToken(userPrincipal);
         // 模擬一個假的 User，省去資料庫驗證
 //        UserDetails mockUser = new User(
 //                authRequest.getEmail(),
@@ -72,7 +72,8 @@ public class AuthController {
 //                Collections.emptyList()
 //        );
 //        final String token = jwtTokenUtil.generateToken(mockUser);
-        return new AuthResponse(token, authRequest.getEmail());
+//        return new AuthResponse(token, authRequest.getEmail());
+        return new AuthResponse();
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -4,6 +4,10 @@ import in.bushansirgur.restapi.entity.ProfileEntity;
 import in.bushansirgur.restapi.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,30 +18,37 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.util.ArrayList;
 
+@RequiredArgsConstructor
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final ProfileRepository profileRepository;
-    private final StringRedisTemplate redisTemplate;
+    // 自訂 RedisTemplate（例如指向不同節點）
+    @Qualifier("customRedisTemplate")
+    private final StringRedisTemplate customRedisTemplate;
+
     private static final String REDIS_PREFIX = "user:auth:";
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         String redisKey = REDIS_PREFIX + email;
-        // 嘗試從 Redis 取得密碼
-        String encodedPassword = redisTemplate.opsForValue().get(redisKey);
 
-        if (encodedPassword != null) {
-            // Redis 有快取，直接用
-            return new User(email, encodedPassword, new ArrayList<>());
+        try {
+            String encodedPassword = customRedisTemplate.opsForValue().get(redisKey);
+            if (encodedPassword != null) {
+                log.info("Redis 查詢 key={}, value={}", redisKey, encodedPassword);
+                return new User(email, encodedPassword, new ArrayList<>());
+            }
+        } catch (Exception ex) {
+            log.error("Redis 連線失敗：{}", ex.getMessage(), ex);
+            // 可以選擇 fallback，或繼續向 DB 查詢
         }
 
         ProfileEntity profile = profileRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Profile not found for the email "+email));
-        log.info("Inside loadUserByUsername()::: priting the profile details {}", profile);
-        // 把查到的帳號密碼快取進 Redis，設定有效時間（例如 1 小時）
-        redisTemplate.opsForValue().set(redisKey, profile.getPassword(), Duration.ofHours(1));
+                .orElseThrow(() -> new UsernameNotFoundException("Profile not found for the email " + email));
+
+        customRedisTemplate.opsForValue().set(redisKey, profile.getPassword(), Duration.ofHours(1));
         return new User(profile.getEmail(), profile.getPassword(), new ArrayList<>());
     }
 }
