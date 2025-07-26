@@ -23,32 +23,10 @@ import java.util.ArrayList;
 @Slf4j
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final ProfileRepository profileRepository;
-    // 自訂 RedisTemplate（例如指向不同節點）
-    @Qualifier("customRedisTemplate")
-    private final StringRedisTemplate customRedisTemplate;
-
-    private static final String REDIS_PREFIX = "user:auth:";
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        String redisKey = REDIS_PREFIX + email;
-
-        try {
-            String encodedPassword = customRedisTemplate.opsForValue().get(redisKey);
-            if (encodedPassword != null) {
-                log.info("Redis 查詢 key={}, value={}", redisKey, encodedPassword);
-                return new User(email, encodedPassword, new ArrayList<>());
-            }
-        } catch (Exception ex) {
-            log.error("Redis 連線失敗：{}", ex.getMessage(), ex);
-            // 可以選擇 fallback，或繼續向 DB 查詢
-        }
-
-        ProfileEntity profile = profileRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Profile not found for the email " + email));
-
-        customRedisTemplate.opsForValue().set(redisKey, profile.getPassword(), Duration.ofHours(1));
-        return new User(profile.getEmail(), profile.getPassword(), new ArrayList<>());
+        // ✅ 完全跳過 Redis / DB，直接建立 fake user
+        log.info("✅ 模擬用戶登入，不驗證密碼：{}", email);
+        return new User(email, "mockPassword", new ArrayList<>());
     }
 }
