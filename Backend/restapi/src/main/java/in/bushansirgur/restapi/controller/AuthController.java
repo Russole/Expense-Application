@@ -116,9 +116,9 @@ public class AuthController {
             // AuthenticationManager 會遍歷已註冊的 AuthenticationProvider 來進行驗證
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
             return authentication;
-        }catch (DisabledException ex) {
+        }catch (DisabledException ex) { // 表示帳號已被停用，要搭配資料庫欄位（如 enabled 或 active）
             throw new Exception("Profile disabled");
-        }catch (BadCredentialsException ex) {
+        }catch (BadCredentialsException ex) { // 使用者帳密輸入錯誤，屬於正常的登入失敗情形。
             throw new Exception("Bad Credentials");
         }
     }

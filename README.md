@@ -35,3 +35,11 @@ docker logs -f Expense-App
 ```
 docker exec -it redis-local redis-cli
 ```
+
+### My-SQL
+
+```
+docker exec -it my-mysql bash
+# mysql CLI
+mysql -u root -p
+```

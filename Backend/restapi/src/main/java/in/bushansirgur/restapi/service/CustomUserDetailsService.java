@@ -41,6 +41,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 return new User(email, encodedPassword, new ArrayList<>());
             }
         } catch (Exception ex) {
+            // 只要 catch 被觸發，你就會看到 log
             log.error("Redis 連線失敗：{}", ex.getMessage(), ex);
             // 可以選擇 fallback，或繼續向 DB 查詢
         }

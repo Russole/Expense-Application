@@ -26,8 +26,11 @@ public class WebSecurityConfig {
         return httpSecurity.csrf(csrf -> csrf.disable())
                 // /login 和 /register 是開放的，不需要 JWT，也不會被 SecurityContextHolder 驗證
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/login", "/register").permitAll().anyRequest().authenticated())
+                // 設定為無狀態模式（stateless），表示 不會使用 Session 儲存登入狀態。
+                // 每次請求都需要攜帶 JWT。
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // UsernamePasswordAuthenticationFilter 默認行為是監聽 /login 請求，並檢查 request 中的登錄資訊。
+                // 並沒有啟用 UsernamePasswordAuthenticationFilter，因為你根本沒註冊它或使用表單登入的預設流程。
                 // AuthenticationManager 會調用 DaoAuthenticationProvider 來驗證用戶憑證
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class) // 讓請求在進行用戶名與密碼驗證之前先經過 JWT（JSON Web Token）驗證
                 .httpBasic(Customizer.withDefaults())
